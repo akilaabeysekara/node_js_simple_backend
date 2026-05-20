@@ -1,11 +1,17 @@
-// authRouter.ts
+import { Router } from "express"
+import { createUser, login } from "../controllers/authController"
+import { hello } from "../middleware/testMid"
+import { getMyDetails } from "../controllers/userController"
+import { authenticate } from "../middleware/auth"
 
-import { Router } from "express";
-import { loginUser } from "../controllers/authController";
+const router = Router()
 
-const router = Router();
+// PUBLIC
+router.post("/register", createUser)
+router.post("/login", login)
 
-// Login route
-router.post("/login", loginUser);
+// PROTECTED
+router.get("/me", authenticate,getMyDetails)
+router.get("/hello",authenticate, getMyDetails)
 
-export default router;
+export default router       

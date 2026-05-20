@@ -1,7 +1,7 @@
 // customer.controller.ts
 
 import { Request, Response } from "express";
-import { userModel } from "../models/userModel";
+import { UserModel } from "../models/userModel";
 import bcrypt from "bcryptjs";
 
 // Save user
@@ -23,7 +23,7 @@ export const saveUser = async (req: Request, res: Response) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Create new user object
-        const newUser = new userModel({
+        const newUser = new UserModel({
             name,
             password: hashedPassword,
             role,
@@ -59,7 +59,7 @@ export const getAllUser = async (req: Request, res: Response) => {
     try {
 
         // Get all users from database
-        const users = await userModel.find();
+        const users = await UserModel.find();
 
         // Send user list
         res.status(200).json({
@@ -94,7 +94,7 @@ export const updateUser = async (req: Request, res: Response) => {
         }
 
         // Update user
-        const updatedUser = await userModel.findByIdAndUpdate(
+        const updatedUser = await UserModel.findByIdAndUpdate(
             id,
             req.body,
             { new: true }
@@ -135,7 +135,7 @@ export const deleteUser = async (req: Request, res: Response) => {
         const { id } = req.params;
 
         // Delete user
-        const deletedUser = await userModel.findByIdAndDelete(id);
+        const deletedUser = await UserModel.findByIdAndDelete(id);
 
         // Check user exists
         if (!deletedUser) {

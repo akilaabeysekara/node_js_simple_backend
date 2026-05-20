@@ -1,29 +1,32 @@
-import { Document,Schema } from "mongoose";
-import { model } from "mongoose";
+import { Document, model, Schema } from "mongoose"
 
 export enum UserRole {
-    ADMIN = "ADMIN",
-    USER = "USER",
-    MANAGER = "MANAGER"
+  ADMIN = "ADMIN",
+  USER = "USER",
+  MANAGER = "MANAGER"
 }
 
-interface IUser extends Document {
-    name: string;
-    password: string;
-    role: string;
-    email?: string;
-    isApproved : boolean;
+export interface IUser extends Document {
+  name: string
+  email: string
+  password: string
+  roles: UserRole[]
+  approved: boolean
 }
 
-const userSchema = new Schema<IUser>({ 
+const userSchema = new Schema<IUser>(
+  {
     name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    role: { type: String, 
-        enum: Object.values(UserRole), 
-        required: true }, // Define the role field as a string with allowed values from the UserRole enum, and make it required
-    email: { type: String },
-    isApproved: { type: Boolean, required: true }
+    roles: {
+      type: [String],
+      enum: Object.values(UserRole),
+      default: [UserRole.USER]
+    },
+    approved: { type: Boolean, required: true }
+  },
+  { timestamps: true }
+)
 
-});
-
-export const userModel = model<IUser>("User", userSchema);
+export const UserModel = model<IUser>("user_details", userSchema)
